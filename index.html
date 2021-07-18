@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Pokepedia</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+          integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+     <link rel="stylesheet" href="public/css/main.css">
+</head>
+
+<body>
+     <header>
+          <div class="pokemon-logo">
+               <img src="images/International_Pokémon_logo.svg" alt="">
+          </div>
+          <div class="search-bar">
+               <input type="text" placeholder="Search Pokemon" id="search-bar">
+               <button id="search-button"><i class="fas fa-search"></i></button>
+          </div>
+          <div class="pokedex-logo">
+               <img src="images/instinct.svg" alt="">
+          </div>
+     </header>
+
+     <main>
+          <div class="pokemons-wrapper" id="pokemons-wrapper">
+
+          </div>
+          <div class="spinner" id="spinner"></div>
+          <button id="load-more">Load more pokemons</button>
+     </main>
+
+
+     <!-- Modal -->
+     <div class="modal" id="modal">
+
+          <div class="modal-content" id="modal-content">
+               <div class="close-btn" id="close-btn">&times;</div>
+          </div>
+
+     </div>
+     <!-- jQuery CDN -->
+     <script src="https://code.jquery.com/jquery-3.6.0.js"
+          integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+     <script src="./js/script.js"></script>
+</body>
+
+</html>

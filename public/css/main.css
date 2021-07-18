@@ -1,0 +1,481 @@
+:root {
+  --max-width: 1280px;
+  --primary: #323232;
+  --secondary: #626262;
+  --light: rgb(238, 234, 234);
+  --textColor: #fff;
+  --textMuted: rgb(95, 95, 95);
+  --fontBigger: 2rem;
+  --fontBig: 1.5rem;
+  --fontMed: 1rem;
+  --fontSmall: 0.7rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background: var(--secondary);
+  font-family: "Inter", sans-serif;
+  /* Modal */
+}
+
+body h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+body h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+body p {
+  font-size: 1rem;
+  color: var(--white);
+}
+
+body > header {
+  background: var(--primary);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 15px 20px;
+  width: 100%;
+}
+
+body > header > .pokemon-logo {
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+}
+
+body > header > .pokemon-logo > img {
+  width: 150px;
+  height: 75px;
+}
+
+body > header > .search-bar {
+  position: relative;
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+}
+
+body > header > .search-bar > input {
+  border: 0;
+  padding: 8px 12px;
+  font-size: var(--fontMed);
+  width: 100%;
+  border-radius: 12px;
+}
+
+body > header > .search-bar > input:focus {
+  outline: none;
+}
+
+body > header > .search-bar > button {
+  background: #b97fc9;
+  padding: 8px 12px;
+  border: 0;
+  font-size: var(--fontMed);
+  border-radius: 0 12px 12px 0;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+
+body > header > .pokedex-logo {
+  -webkit-box-flex: 2;
+      -ms-flex: 2;
+          flex: 2;
+  text-align: end;
+}
+
+body > header > .pokedex-logo > img {
+  width: 150px;
+  height: 75px;
+}
+
+body > main {
+  margin: 18px auto;
+}
+
+body > main > .pokemons-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin: 0 auto;
+  padding: 12px 8px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+body > main > .pokemons-wrapper > .card {
+  background-color: var(--light);
+  margin: 1rem;
+  width: 225px;
+  border-radius: 8px;
+  overflow: hidden;
+  -webkit-animation: animateCard 1s;
+          animation: animateCard 1s;
+  cursor: pointer;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+body > main > .pokemons-wrapper > .card:hover {
+  -webkit-transform: translate(0, -12px);
+          transform: translate(0, -12px);
+  -webkit-box-shadow: 0 0 3px 3px rgba(255, 100, 0, 0.6);
+          box-shadow: 0 0 3px 3px rgba(255, 100, 0, 0.6);
+}
+
+body > main > .pokemons-wrapper > .card > img {
+  width: 100%;
+}
+
+body > main > .pokemons-wrapper > .card > .pokemon-about {
+  background: #fff;
+  width: 100%;
+  padding: 1rem;
+}
+
+body > main > .pokemons-wrapper > .card > .pokemon-about > .types-wrapper {
+  margin: 8px 0;
+}
+
+body > main > .pokemons-wrapper > .card > .pokemon-about > .text-muted {
+  color: var(--textMuted);
+}
+
+body > main > button {
+  border: 0;
+  font-size: var(--fontBig);
+  margin: 0 auto;
+  display: block;
+  background: #3def81;
+  padding: 0.5em 1em;
+  border-radius: 1em;
+  cursor: pointer;
+}
+
+body > .modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 50px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: black;
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+  /* Modal Content */
+}
+
+body > .modal > .modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 18px;
+  border: 1px solid #888;
+  width: 80%;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body > .modal > .modal-content > .content-left > img {
+  width: 300px;
+}
+
+body > .modal > .modal-content > .content-left > h2 {
+  margin-bottom: 0.5em;
+}
+
+body > .modal > .modal-content > .content-left > h2 > span {
+  font-size: 0.5em;
+  margin-left: 1em;
+  color: var(--secondary);
+}
+
+body > .modal > .modal-content > .content-left > .types-wrapper {
+  margin-bottom: 0.5rem;
+}
+
+body > .modal > .modal-content > .content-left > .sprites-wrapper {
+  width: 300px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+body > .modal > .modal-content > .content-left > .sprites-wrapper > img {
+  width: 50px;
+  cursor: pointer;
+}
+
+body > .modal > .modal-content > .content-left > .sprites-wrapper .thumb:target ~ img {
+  -webkit-animation: animateCard 0.5s;
+          animation: animateCard 0.5s;
+}
+
+body > .modal > .modal-content > .content-left > .sprites-wrapper .selected {
+  border: 1px solid #000;
+}
+
+@-webkit-keyframes animateCard {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes animateCard {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body > .modal > .modal-content > .content-right {
+  background: #3dc7ef;
+  width: 400px;
+  height: 250px;
+  border-radius: 16px;
+  display: -ms-grid;
+  display: grid;
+  padding: 12px;
+}
+
+body > .modal > .modal-content > .content-right h4 {
+  font-weight: 400;
+}
+
+body > .modal > .modal-content > .close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 10px;
+  font-size: var(--fontBigger);
+  background: var(--secondary);
+  cursor: pointer;
+  border-bottom-left-radius: 10px;
+}
+
+/* Spinner */
+.spinner {
+  display: none;
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+  border: 8px solid #ffc000;
+  border-top: 8px solid #fff;
+  border-radius: 50%;
+  -webkit-animation: spinner 1s ease infinite;
+          animation: spinner 1s ease infinite;
+}
+
+/* Animations */
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes animateCard {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Pokemon attributes styles */
+.pill {
+  font-size: var(--fontSmall);
+  margin-right: 0.5em;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+}
+
+.grass {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #9bcc50), color-stop(50%, #9bcc50));
+  background: linear-gradient(180deg, #9bcc50 50%, #9bcc50 50%);
+  color: #000;
+}
+
+.poison {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #b97fc9), color-stop(50%, #b97fc9));
+  background: linear-gradient(180deg, #b97fc9 50%, #b97fc9 50%);
+  color: #fff;
+}
+
+.fire {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #fd7d24), color-stop(50%, #fd7d24));
+  background: linear-gradient(180deg, #fd7d24 50%, #fd7d24 50%);
+  color: #fff;
+}
+
+.water {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #4592c4), color-stop(50%, #4592c4));
+  background: linear-gradient(180deg, #4592c4 50%, #4592c4 50%);
+  color: #fff;
+}
+
+.flying {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #3dc7ef), color-stop(50%, #bdb9b8));
+  background: linear-gradient(180deg, #3dc7ef 50%, #bdb9b8 50%);
+  color: #000;
+}
+
+.bug {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #729f3f), color-stop(50%, #729f3f));
+  background: linear-gradient(180deg, #729f3f 50%, #729f3f 50%);
+  color: #fff;
+}
+
+.dark {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #707070), color-stop(50%, #707070));
+  background: linear-gradient(180deg, #707070 50%, #707070 50%);
+  color: #fff;
+}
+
+.electric {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #eed535), color-stop(50%, #eed535));
+  background: linear-gradient(180deg, #eed535 50%, #eed535 50%);
+  color: #000;
+}
+
+.dragon {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #53a4cf), color-stop(50%, #f16e57));
+  background: linear-gradient(180deg, #53a4cf 50%, #f16e57 50%);
+  color: #fff;
+}
+
+.fairy {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #fdb9e9), color-stop(50%, #fdb9e9));
+  background: linear-gradient(180deg, #fdb9e9 50%, #fdb9e9 50%);
+  color: #000;
+}
+
+.ghost {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #7b62a3), color-stop(50%, #7b62a3));
+  background: linear-gradient(180deg, #7b62a3 50%, #7b62a3 50%);
+  color: #fff;
+}
+
+.ground {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #f7de3f), color-stop(50%, #ab9842));
+  background: linear-gradient(180deg, #f7de3f 50%, #ab9842 50%);
+  color: #000;
+}
+
+.normal {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #a4acaf), color-stop(50%, #a4acaf));
+  background: linear-gradient(180deg, #a4acaf 50%, #a4acaf 50%);
+  color: #000;
+}
+
+.psychic {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #f366b9), color-stop(50%, #f366b9));
+  background: linear-gradient(180deg, #f366b9 50%, #f366b9 50%);
+  color: #fff;
+}
+
+.steel {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #9eb7b8), color-stop(50%, #9eb7b8));
+  background: linear-gradient(180deg, #9eb7b8 50%, #9eb7b8 50%);
+  color: #000;
+}
+
+.fighting {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #d56723), color-stop(50%, #d56723));
+  background: linear-gradient(180deg, #d56723 50%, #d56723 50%);
+  color: #fff;
+}
+
+.ice {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #51c4e7), color-stop(50%, #51c4e7));
+  background: linear-gradient(180deg, #51c4e7 50%, #51c4e7 50%);
+  color: #000;
+}
+
+.rock {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(50%, #a38c21), color-stop(50%, #a38c21));
+  background: linear-gradient(180deg, #a38c21 50%, #a38c21 50%);
+  color: #fff;
+}
+/*# sourceMappingURL=main.css.map */
