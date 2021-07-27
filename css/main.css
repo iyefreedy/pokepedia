@@ -255,7 +255,7 @@ body > .modal > .modal-content > .content-left > .sprites-wrapper .thumb:target 
 }
 
 body > .modal > .modal-content > .content-left > .sprites-wrapper .selected {
-  border: 1px solid #000;
+  border: 1px solid #bababa;
 }
 
 @-webkit-keyframes animateCard {

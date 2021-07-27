@@ -1,5 +1,4 @@
-const API_URL = "https://pokeapi.co/api/v2/pokemon";
-const API_URL2 = `${API_URL}?offset=0&limit=1118`;
+const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 let nextUrl = "";
 const pokemonsWrapper = document.getElementById("pokemons-wrapper");
 const loadMore = document.getElementById("load-more");
@@ -8,161 +7,128 @@ const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 const cardWrapper = document.getElementById("card");
 
-document.addEventListener("DOMContentLoaded", function (e) {
-    fetchPokemons("");
-
-    loadMore.addEventListener("click", (e) => {
-        spinner.style.display = "block";
-        loadMore.style.display = "none";
-        fetchPokemons(nextUrl);
-    });
-
-    searchButton.addEventListener("click", (e) => {
-        pokemonsWrapper.innerHTML = "";
-        loadMore.style.display = "none";
-        handleSearchButton(searchBar.value);
-    });
-
-    searchBar.addEventListener("input", (e) => {
-        setTimeout(() => {
-            if (e.target.value) {
-                handleSearchButton(e.target.value);
-            }
-        }, 500);
-    });
+document.addEventListener("DOMContentLoaded", async (e) => {
+    await loadPokemons("");
 });
 
-// Fetching data from API and return array of object
-async function fetchPokemons(url) {
-    await fetch(url ? url : API_URL)
-        .then((response) => response.json())
-        .then((result) => {
-            nextUrl = result.next;
-            return result.results;
-        })
-        .then((items) => handlePokemonArray(items));
-}
-
-// Handling array of object that will fetch pokemon info by every url
-function handlePokemonArray(items) {
-    items.forEach(async (item) => {
-        await fetch(item.url)
-            .then((response) => response.json())
-            .then((result) => loadCard(result));
-    });
-}
-
-// Handle search button
-async function handleSearchButton(value) {
-    pokemonsWrapper.innerHTML = "";
+// Loading more pokemons
+loadMore.addEventListener("click", (e) => {
     loadMore.style.display = "none";
-    await fetch(API_URL2)
+    spinner.style.display = "block";
+    loadPokemons(nextUrl);
+});
+
+// Fetching data from APIs
+async function loadPokemons(next) {
+    await fetch(next ? next : BASE_URL)
         .then((response) => response.json())
-        .then((result) => result.results)
-        .then((items) => handleFiltering(items, value));
+        .then((results) => {
+            nextUrl = results.next;
+            handlingArrayObject(results.results);
+        });
 }
 
-function handleFiltering(items, value) {
-    const newItems = items.filter((item) => item.name.includes(value));
-    newItems.forEach(async (item) => {
-        await fetch(item.url)
+// Fetching array of URL
+function handlingArrayObject(results) {
+    results.forEach((result) => {
+        fetch(result.url)
             .then((response) => response.json())
-            .then((result) => loadCard(result));
+            .then((result) => loadUI(result))
+            .then(() => {
+                spinner.style.display = "none";
+                loadMore.style.display = "block";
+            });
     });
 }
 
-// Handle card clicked
-function fetchPokemon(id) {
-    const endpoint = `${API_URL}/${id}`;
-    fetch(endpoint)
+// Handling Modal
+function handleModal(pokemonId) {
+    fetch(`${BASE_URL}/${pokemonId}`)
         .then((response) => response.json())
-        .then((results) => openModal(results));
+        .then((results) => loadModal(results));
 }
 
-// Open modal
-function openModal(results) {
-    // Overlay
-    const overlay = document.getElementById("modal");
-    overlay.style.display = "block";
-    overlay.style.animation = "modalFadeIn 0.3s";
+// Load modals
+function loadModal(result) {
+    const modalWrapper = document.getElementById("modal");
+    const modalContent = document.getElementById("modal-content");
+    modalContent.innerHTML = "";
 
-    // Modal
-    const modal = document.getElementById("modal-content");
-    modal.innerHTML = "";
-
-    // modal content left
-    const contentLeft = document.createElement("div");
-    contentLeft.classList.add("content-left");
-
-    // modal content right
-    const contentRight = document.createElement("div");
-    contentRight.classList.add("content-right");
-
-    // Close button
+    // Create close button
     const closeBtn = document.createElement("div");
     closeBtn.innerHTML = "&times;";
     closeBtn.classList.add("close-btn");
-    addEventListener("click", (e) => {
-        if (e.target.classList.contains("close-btn")) {
-            document.getElementById("modal").style.display = "none";
-        }
+
+    // Handle close btn
+    closeBtn.addEventListener("click", (e) => {
+        modalWrapper.style.display = "none";
     });
+    modalContent.appendChild(closeBtn);
+    const contentLeft = document.createElement("div");
+    contentLeft.classList.add("content-left");
 
-    // Content left
-    // Image
-    const image = document.createElement("img");
-    image.src = results.sprites.front_default;
+    // Create img element for pokemon image
+    const pImage = document.createElement("img");
+    pImage.src = result.sprites.front_default;
 
-    // Pokemon name
-    const name = document.createElement("h2");
-    name.textContent = strToUpperCaseFirst(results.name);
+    // Create h2 element for pokemon name
+    const pName = document.createElement("h2");
+    pName.textContent = strToUpperCaseFirst(result.name);
 
-    // create div element for types wrapper
+    // create span element for pokemon index
+    const pId = document.createElement("span");
+    pId.textContent = giveHashtagToId(result.id);
+    pName.appendChild(pId);
+
+    // create types wrapper
     const typesWrapper = document.createElement("div");
     typesWrapper.classList.add("types-wrapper");
 
-    const types = results.types;
-    types.forEach((type) => {
-        const typeText = document.createElement("span");
-        typeText.classList.add("pill", type.type.name);
-        typeText.textContent = strToUpperCaseFirst(type.type.name);
-        typesWrapper.appendChild(typeText);
+    result.types.forEach((t) => {
+        const pType = document.createElement("span");
+        pType.classList.add("pill");
+        pType.classList.add(t.type.name);
+        pType.textContent = strToUpperCaseFirst(t.type.name);
+        typesWrapper.appendChild(pType);
     });
 
-    // Create div elements for sprites wrapper
+    // create sprites wrapper
     const spritesWrapper = document.createElement("div");
     spritesWrapper.classList.add("sprites-wrapper");
-
-    // Reordering object
     const items = [];
 
-    for (const sprite in results.sprites) {
+    for (const sprite in result.sprites) {
         if (sprite == "front_default") {
-            items.push(results.sprites[sprite]);
+            items.push(result.sprites[sprite]);
         }
     }
 
-    const arrObject = Object.values(results.sprites);
+    const arrObject = Object.values(result.sprites);
     items.push(...arrObject);
     const uniqueArr = new Set(items);
     const sprites = [...uniqueArr];
     let newSprites = sprites.filter((val) => val != null);
     newSprites = newSprites.slice(0, newSprites.length - 2);
-    console.log(newSprites);
 
-    newSprites.forEach((val, index, array) => {
+    newSprites.forEach((val) => {
         const thumb = document.createElement("img");
         thumb.classList.add("thumb");
-        if (val == image.src) {
+        if (val == pImage.src) {
             thumb.classList.add("selected");
         }
         thumb.src = val;
         spritesWrapper.appendChild(thumb);
     });
 
+    // Append child for content left
+    contentLeft.appendChild(pImage);
+    contentLeft.appendChild(pName);
+    contentLeft.appendChild(typesWrapper);
+    contentLeft.appendChild(spritesWrapper);
+
     modal.addEventListener("click", (e) => {
         if (e.target.classList.contains("thumb")) {
-            image.src = e.target.src;
+            pImage.src = e.target.src;
             const children = document.querySelectorAll(".thumb");
             const nodeArr = Array.from(children);
             const oldChild = nodeArr.filter((val) =>
@@ -175,17 +141,16 @@ function openModal(results) {
         }
     });
 
-    // Pokemon index
-    const index = document.createElement("span");
-    index.textContent = giveHashtagToId(results.id);
+    // create content right wrapper
+    const contentRight = document.createElement("div");
+    contentRight.classList.add("content-right");
 
-    // Content right
     // Weight
     const weightWrapper = document.createElement("div");
     const weightText = document.createElement("h4");
     const weightNode = document.createElement("h3");
     weightText.textContent = "Weight";
-    weightNode.textContent = calcWeight(results.weight);
+    weightNode.textContent = calcWeight(result.weight);
     weightWrapper.appendChild(weightText);
     weightWrapper.appendChild(weightNode);
 
@@ -194,7 +159,7 @@ function openModal(results) {
     const heightText = document.createElement("h4");
     const heightNode = document.createElement("h3");
     heightText.textContent = "Height";
-    heightNode.textContent = results.height;
+    heightNode.textContent = result.height;
     heightWrapper.appendChild(heightText);
     heightWrapper.appendChild(heightNode);
 
@@ -204,79 +169,68 @@ function openModal(results) {
     const abilityNode = document.createElement("h3");
     abilityText.textContent = "Ability";
     abilityNode.textContent = strToUpperCaseFirst(
-        results.abilities[0].ability.name
+        result.abilities[0].ability.name
     );
     abilityWrapper.appendChild(abilityText);
     abilityWrapper.appendChild(abilityNode);
 
-    // Apending all child to wrapper
-    modal.appendChild(closeBtn);
-    contentLeft.appendChild(image);
-    name.appendChild(index);
-    contentLeft.appendChild(name);
-    contentLeft.appendChild(typesWrapper);
-    contentLeft.appendChild(spritesWrapper);
-    // Content right
     contentRight.appendChild(weightWrapper);
     contentRight.appendChild(heightWrapper);
     contentRight.appendChild(abilityWrapper);
-    modal.appendChild(contentLeft);
-    modal.appendChild(contentRight);
-    overlay.appendChild(modal);
+
+    // Append content to modal
+    modalContent.appendChild(contentLeft);
+    modalContent.appendChild(contentRight);
+
+    modalWrapper.style.display = "block";
 }
 
-// Handle loading all element needed for showing pokemon info
-function loadCard(pokemon) {
-    // create div element for card that contain pokemon info
+// Loading UI
+function loadUI(result) {
+    // Create card element
     const card = document.createElement("div");
     card.classList.add("card");
-    card.setAttribute("pokemon-id", pokemon.id);
+    card.style.order = result.id;
+    card.setAttribute("pokemonId", result.id);
     card.addEventListener("click", (e) => {
-        fetchPokemon(card.getAttribute("pokemon-id"));
+        handleModal(card.getAttribute("pokemonId"));
     });
-    // card.setAttribute('pokemon-id', pokemon)
 
-    // create div element that contain pokemon info
-    const content = document.createElement("div");
-    content.classList.add("pokemon-about");
-
-    // create img element for pokemon image
+    // create img element
     const image = document.createElement("img");
-    image.src = pokemon.sprites.front_default;
+    image.src = result.sprites.front_default;
+    card.appendChild(image);
 
-    // create h3 element for pokemon name
-    const name = document.createElement("h3");
-    name.textContent = strToUpperCaseFirst(pokemon.name);
+    // Create info wrapper
+    const aboutWrapper = document.createElement("div");
+    aboutWrapper.classList.add("pokemon-about");
 
-    // create p element for pokemon index
-    const index = document.createElement("p");
-    index.classList.add("text-muted");
-    index.textContent = giveHashtagToId(pokemon.id);
+    // Create h3 element for pokemon name
+    const pokemonName = document.createElement("h3");
+    pokemonName.textContent = strToUpperCaseFirst(result.name);
+    aboutWrapper.appendChild(pokemonName);
 
-    // create div element for types wrapper
+    // Create types/attributes wrapper
     const typesWrapper = document.createElement("div");
     typesWrapper.classList.add("types-wrapper");
+    result.types.forEach((type) => {
+        const pokemonType = document.createElement("span");
 
-    const types = pokemon.types;
-    types.forEach((type) => {
-        const typeText = document.createElement("span");
-        typeText.classList.add("pill", type.type.name);
-        typeText.textContent = strToUpperCaseFirst(type.type.name);
-        typesWrapper.appendChild(typeText);
+        pokemonType.classList.add(type.type.name, "pill");
+        pokemonType.textContent = strToUpperCaseFirst(type.type.name);
+        typesWrapper.appendChild(pokemonType);
     });
+    aboutWrapper.appendChild(typesWrapper);
 
-    // Append all created element to body
-    content.appendChild(name);
-    content.appendChild(typesWrapper);
-    content.appendChild(index);
-    card.appendChild(image);
-    card.appendChild(content);
-    card.style.order = pokemon.id;
+    // Create p element for pokemon index
+    const pokemonIndex = document.createElement("p");
+    pokemonIndex.classList.add("text-muted");
+    pokemonIndex.textContent = giveHashtagToId(result.id);
+    aboutWrapper.appendChild(pokemonIndex);
 
+    // Wrapping all element into body
+    card.appendChild(aboutWrapper);
     pokemonsWrapper.appendChild(card);
-
-    spinner.style.display = "none";
-    loadMore.style.display = "block";
 }
 
 // Helpers
